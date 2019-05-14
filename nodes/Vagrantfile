@@ -1,0 +1,72 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+require 'pp'
+require 'getoptlong'
+#load 'vagrant_funcs.rb'
+
+opts = GetoptLong.new(
+  [ '--design', GetoptLong::OPTIONAL_ARGUMENT ]
+)
+
+design_file='designs/Vagrant_all.yaml'
+
+opts.each do |opt, arg|
+  case opt
+    when '--design'
+	design_file=arg
+  end
+end
+
+# Credits to @andylytical -> https://github.com/ncsa/puppet_deployment
+# Get values from yaml config file
+# (See also: https://stackoverflow.com/a/26394449 )
+conf = YAML.load_file( design_file )
+nodes = conf['nodes']
+
+CPUS="1"
+MEMORY="1024"
+
+
+$script = <<SCRIPT
+#!/bin/bash
+
+PUPPET_ENV=$1
+sed "s/NM_CONTROLLED=yes/NM_CONTROLLED=no/" -i /etc/sysconfig/network-scripts/ifcfg-eth1
+systemctl restart NetworkManager
+# support RPM for puppetserver installation
+rpm -Uvh https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
+# puppet installation plus some other utilities
+yum install -y puppet-agent vim git xauth
+echo -e "\n[main]\nenvironment = $PUPPET_ENV" >> /etc/puppetlabs/puppet/puppet.conf
+echo -e "\n[agent]\nserver = puppet-master.dev.lsst.org" >> /etc/puppetlabs/puppet/puppet.conf
+echo -e "10.0.0.250\tpuppet-master\tpuppet-master.dev.lsst.org" > /etc/hosts
+/opt/puppetlabs/puppet/bin/puppet agent -t
+chmod 755 /opt/puppetlabs/puppet/cache/
+SCRIPT
+
+###################################################
+# Monitoring Cluster definition                   #
+###################################################
+
+Vagrant.configure("2") do |config|
+
+	config.vm.box = "centos/7"
+	config.ssh.forward_x11 = true
+	nodes.each do |nodeName, nodeData|
+		config.vm.define nodeName do |node|
+			node.vm.hostname = nodeData["hostname"]
+			node.vm.provision "shell" do |s|
+				s.inline = $script
+				s.args = nodeData["puppet_environment"]
+			end
+			node.vm.network "private_network", ip: nodeData["ip"]
+			config.vm.provider "virtualbox" do |v|
+				v.name = nodeName
+				v.memory = nodeData["memory"]
+				v.cpus = nodeData["cpu"]
+			end
+		end
+	end
+end

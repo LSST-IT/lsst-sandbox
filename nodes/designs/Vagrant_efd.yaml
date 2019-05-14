@@ -1,0 +1,31 @@
+---
+
+nodes:
+        # This will deploy all the types of DBs plus all the writers configured in hiera
+        ts-efd:
+                hostname: "ts-efd-node-01.vm.dev.lsst.org"
+                ip: "10.0.0.10"
+                memory: 1024
+                cpu: 1
+                puppet_environment: "IT_1101_avillalobos"
+
+        ts-efd-influxdb:
+                hostname: "ts-efd-influxdb-01.vm.dev.lsst.org"
+                ip: "10.0.0.11"
+                memory: 1024
+                cpu: 1
+                puppet_environment: "IT_1101_avillalobos"
+
+        ts-efd-mysql:
+               hostname: "ts-efd-mysql-01.vm.dev.lsst.org"
+               ip: "10.0.0.12"
+               memory: 1024
+               cpu: 1
+               puppet_environment: "IT_1101_avillalobos"
+
+        ts-efd-writers:
+                hostname: "ts-efd-writers-01.vm.dev.lsst.org"
+                ip: "10.0.0.13"
+                memory: 1024
+                cpu: 1
+                puppet_environment: "IT_1101_avillalobos"

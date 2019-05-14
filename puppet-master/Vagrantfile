@@ -1,0 +1,34 @@
+require 'yaml'
+require 'pp'
+
+conf = YAML.load_file( "Puppetconf.yaml" )
+Puppetconf = conf["puppet-master"]
+
+Vagrant.configure("2") do |config|
+	config.vm.define "puppet-master" do |puppet|
+		puppet.vm.box = "centos/7"
+		puppet.vm.hostname = Puppetconf["hostname"]
+		puppet.vm.synced_folder '.', '/vagrant'
+		if Puppetconf.key?("gitcode_path")
+			puppet.vm.synced_folder Puppetconf["gitcode_path"], "/opt/puppet-code"
+		end
+
+		$shared_hiera_value = "false"
+		if Puppetconf.key?("shared_hiera") and Puppetconf["shared_hiera"]
+			puppet.vm.synced_folder Puppetconf["shared_hiera_path"], "/etc/puppetlabs/code/hieradata/production"
+			$shared_hiera_value = "true"
+		end
+		if Puppetconf.key?("puppet_environment")
+			puppet.vm.provision :shell, :path => 'provision-script.sh', :args => [Puppetconf["puppet_environment"], Puppetconf["ip"], $shared_hiera_value ]
+		else
+			puppet.vm.provision :shell, :path => 'provision-script.sh', :args => ["production", Puppetconf["ip"], $shared_hiera_value ]
+		end
+		puppet.vm.network "private_network", ip: Puppetconf["ip"]
+		puppet.ssh.forward_x11 = true
+		puppet.vm.provider "virtualbox" do |v|
+			v.name = Puppetconf["hostname"]
+			v.memory = Puppetconf["memory"]
+			v.cpus = Puppetconf["cpu"]
+		end
+	end
+end

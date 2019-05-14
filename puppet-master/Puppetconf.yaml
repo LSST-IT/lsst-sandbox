@@ -1,0 +1,18 @@
+---
+
+puppet-master:
+        hostname: "gs-puppet-master.vm.dev.lsst.org"
+        ip: 10.0.0.250
+        memory: 1024
+        cpu: 1
+        # This variable allows you to decide wether you use the default repo to get your hiera variables or you want to share a local copy, in which case, the path must be configured using shared_hiera_path option
+        # Please note that if you want to share you own local version of hiera, it also needs to modify the hiera value for the puppet master:
+        # * r10k_hiera_org
+        # * hiera_repo
+        shared_hiera: true
+        shared_hiera_path: "/Users/avillalobos/workspace/lsst_devops/puppet-master/hiera/"
+        # gitcode_path will be mounted on this environment in: /etc/puppetlabs/code/environments/$ENVIRONMENT
+        #puppet_environment: "IT_1101_avillalobos"
+        # If you want to work on your own puppet code, we recommend adding this variable with the path in where the puppet code is
+        #gitcode_path: "../../itconf_l1ts/"  
+ 
