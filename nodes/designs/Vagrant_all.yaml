@@ -25,3 +25,16 @@ nodes:
                 cpu: 2
                 puppet_environment: "develop"
 
+        dm-hs:
+                hostname: "dm-hs-node-01.vm.dev.lsst.org"
+                ip: "10.0.0.30"
+                memory: 1024
+                cpu: 1
+                puppet_environment: "develop"
+
+        ats-ccs-localdb:
+                hostname: "ats-ccs-localdb-01.vm.dev.lsst.org"
+                ip: "10.0.0.40"
+                memory: 1024
+                cpu: 1
+                puppet_environment: "develop"
