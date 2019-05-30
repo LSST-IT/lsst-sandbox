@@ -5,6 +5,8 @@ usage() {
 	echo "-S: Indicates wether you want to share a hiera or not"
 	echo "-p: Puppet environment to be used"
 	echo "-i: IP assigned to this puppet master, added in the /etc/hosts"
+	echo "-m: Name of the module to be mounted"
+	echo "-M: Puppet environment in where this module will be mounted"
 }
 ENVIRONMENT=""
 SHAREDHIERA=false
