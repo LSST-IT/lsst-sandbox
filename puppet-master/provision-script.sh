@@ -99,7 +99,7 @@ else
     basedir: '/etc/puppetlabs/code/hieradata'
 " > /etc/puppetlabs/r10k/r10k.yaml
 fi
-/opt/puppetlabs/puppet/bin/r10k deploy environment -t
+/opt/puppetlabs/puppet/bin/r10k deploy environment -p
 
 
 if $SHAREDHIERA ;
