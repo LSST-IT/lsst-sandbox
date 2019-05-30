@@ -51,6 +51,9 @@ echo -e "\n[agent]\nserver = puppet-master.dev.lsst.org" >> /etc/puppetlabs/pupp
 echo -e "${IP}\tpuppet-master\tpuppet-master.dev.lsst.org" > /etc/hosts
 
 sed -i 's#^PATH=.*#PATH=$PATH:/opt/puppetlabs/puppet/bin:$HOME/bin#g' /root/.bash_profile
+
+#TODO HoxFix -> This installation should be removed once bug <https://github.com/puppetlabs/r10k/issues/930> is fixed
+/opt/puppetlabs/puppet/bin/gem install cri:2.15.6
 /opt/puppetlabs/puppet/bin/gem install r10k
 
 if [ ! -d /etc/puppetlabs/r10k/ ]
@@ -94,7 +97,7 @@ else
     basedir: '/etc/puppetlabs/code/hieradata'
 " > /etc/puppetlabs/r10k/r10k.yaml
 fi
-/opt/puppetlabs/puppet/bin/r10k deploy environment -p
+/opt/puppetlabs/puppet/bin/r10k deploy environment -t
 
 
 if $SHAREDHIERA ;
