@@ -17,8 +17,8 @@ puppet-master:
         #gitcode_path: "../../itconf_l1ts/"
         #Location in where this will be mounted will be calculated from the puppet environment as:
         #  * /etc/puppetlabs/code/environment/<module_puppet_environment>/modules/<module_name>
-        module_development:
-                module_name: "headerservice"
-                module_code_orig_path: "../../itconf_l1ts/modules/headerservice/"
-                module_puppet_environment: "production"
+        #module_development:
+        #        module_name: "headerservice"
+        #        module_code_orig_path: "../../itconf_l1ts/modules/headerservice/"
+        #        module_puppet_environment: "production"
  
