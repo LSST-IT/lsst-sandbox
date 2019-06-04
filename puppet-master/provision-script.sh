@@ -1,13 +1,48 @@
 #!/bin/bash
 
-ENVIRONMENT=$1
-IP=$2
-if [ $# -gt 2 ]
-then
-	SHAREDHIERA=$3
-else
-	SHAREDHIERA=false
-fi
+usage() { 
+	echo "Usage:" 
+	echo "-S: Indicates wether you want to share a hiera or not"
+	echo "-p: Puppet environment to be used"
+	echo "-i: IP assigned to this puppet master, added in the /etc/hosts"
+	echo "-m: Name of the module to be mounted"
+	echo "-M: Puppet environment in where this module will be mounted"
+}
+ENVIRONMENT=""
+SHAREDHIERA=false
+MODULE_NAME=""
+MODULE_PUPPET_ENV=""
+IP=""
+while getopts ":Sp:m:M:i:" o; do
+	case "${o}" in
+			S)
+					SHAREDHIERA=true
+					;;
+			p)
+					ENVIRONMENT=${OPTARG}
+					;;
+			m)
+					MODULE_NAME=${OPTARG}
+					;;
+			M)
+					MODULE_PUPPET_ENV=${OPTARG}
+					;;
+			i)
+			    IP=${OPTARG}
+					;;
+			*)
+					usage
+					;;
+	esac
+done
+shift $((OPTIND-1))
+
+echo "Options received:"
+echo -e "\t * Puppet IP: $IP"
+echo -e "\t * Shared Hiera: $SHAREDHIERA"
+echo -e "\t * Puppet Environment: $ENVIRONMENT"
+echo -e "\t * Module Name: $MODULE_NAME"
+echo -e "\t * Module Puppet Environment: $MODULE_PUPPET_ENV"
 
 rpm -Uvh https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
 yum install -y puppetserver git
@@ -18,6 +53,9 @@ echo -e "\n[agent]\nserver = puppet-master.dev.lsst.org" >> /etc/puppetlabs/pupp
 echo -e "${IP}\tpuppet-master\tpuppet-master.dev.lsst.org" > /etc/hosts
 
 sed -i 's#^PATH=.*#PATH=$PATH:/opt/puppetlabs/puppet/bin:$HOME/bin#g' /root/.bash_profile
+
+#TODO HoxFix -> This installation should be removed once bug <https://github.com/puppetlabs/r10k/issues/930> is fixed
+/opt/puppetlabs/puppet/bin/gem install cri:2.15.6
 /opt/puppetlabs/puppet/bin/gem install r10k
 
 if [ ! -d /etc/puppetlabs/r10k/ ]
@@ -30,14 +68,13 @@ then
 	mkdir -p /etc/puppetlabs/code/hieradata/production
 fi
 
-if [ -z "$(grep etc_puppetlabs_code_hieradata_production /etc/fstab)" ]
-then
-echo "etc_puppetlabs_code_hieradata_production /etc/puppetlabs/code/hieradata/production vboxsf defaults,ro 0 0" >> /etc/fstab
-	mount -a
-fi
-
 if  $SHAREDHIERA ;
 then 
+	if [ -z "$(grep etc_puppetlabs_code_hieradata_production /etc/fstab)" ]
+	then
+	echo "etc_puppetlabs_code_hieradata_production /etc/puppetlabs/code/hieradata/production vboxsf defaults,ro 0 0" >> /etc/fstab
+		mount -a
+	fi
 	echo -e "---
 :cachedir: '/var/cache/r10k'
 
@@ -109,4 +146,17 @@ systemctl start puppetserver
 
 systemctl restart puppetserver
 
+# This mount is being done at the very end to avoid conflicts with r10k and puppet agent.
 
+# If there is a shared folder for the puppet code
+if [ ! -z "$(VBoxControl sharedfolder list | grep opt_${MODULE_NAME})" ] 
+then
+	# if the sharefolder is not in the fstab yet
+	if [ -z "$(grep opt_${MODULE_NAME} /etc/fstab)" ]
+	then
+		echo "Shared puppet module code dir found, mounted into: /etc/puppetlabs/code/environments/${MODULE_PUPPET_ENV}/modules/${MODULE_NAME}"
+		echo "opt_${MODULE_NAME} /opt/${MODULE_NAME} vboxfs defaults,ro 0 0" >> /etc/fstab
+		echo "/opt/${MODULE_NAME} /etc/puppetlabs/code/environments/${MODULE_PUPPET_ENV}/modules/${MODULE_NAME} none defaults,ro,bind 0 0" >> /etc/fstab
+		mount -a
+	fi
+fi

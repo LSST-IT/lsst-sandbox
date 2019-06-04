@@ -69,6 +69,18 @@ The Puppetconf.yaml file into the puppet-master directory, gives you all the con
  * `shared_hiera`: This is a boolean to define wether you want to share a local/custom hiera directory or use the default configured from a repo
  * `shared_hiera_path`: In case `shared_hiera` is true, this variable is used to indicate the path to the hiera value you want to share into the puppet-master server.
 
+The provisioning script now allows the usage of arguments for the script:
+
+    -S: Indicates wether you want to share a hiera or not"
+    -p: Puppet environment to be used"
+    -i: IP assigned to this puppet master, added in the /etc/hosts"
+    -m: Name of the module to be mounted"
+    -M: Puppet environment in where this module will be mounted"
+
+Tests done already by deploying the puppet master and the headerservice mounting the code from the outside.
+
+There is a known issue with the puppet master and the VM, which prevent the machine to boot after it has been powered off for the very first time, just to be aware.
+
 **puppet-master**
 
 To start up a Puppet Master, go into puppet-master directory and execute vagrant up. The ip for the puppet master is 10.0.0.250. Hostname configured as puppet-master.dev.lsst.org.
