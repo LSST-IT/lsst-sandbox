@@ -26,9 +26,13 @@ To use this scripts you need first to start up the puppet master VM. The network
 
 **vagrant-vbguest**
 
-In order to mount the hiera folder into the VM, you need to first install the VirtualBox Guest Additions. Go into the puppet-master directory and run
+In order to mount the hiera folder into the VM, you need to first install the VirtualBox Guest Additions. Go into the puppet-master directory and run:
 
       vagrant plugin install vagrant-vbguest
+
+If you already have install the plugin, make sure it is in the latest version:
+
+      vagrant plugin update vagrant-vbguest
 
 **Directory Structure**
 
