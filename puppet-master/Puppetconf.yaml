@@ -9,8 +9,8 @@ puppet-master:
         # Please note that if you want to share you own local version of hiera, it also needs to modify the hiera value for the puppet master:
         # * r10k_hiera_org
         # * hiera_repo
-        shared_hiera: false
-        shared_hiera_path: "hiera"
+        shared_hiera: true
+        shared_hiera_path: "../../lsst-sandbox-hiera/"
         #gitcode_path will be mounted on this environment in: /etc/puppetlabs/code/environments/$ENVIRONMENT
         #puppet_environment: "IT_1101_avillalobos"
         # If you want to work on your own puppet code, we recommend adding this variable with the path in where the puppet code is
