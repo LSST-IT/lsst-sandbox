@@ -4,6 +4,13 @@ nodes:
         # ======================================================================
         # Monitoring Cluster
         # ======================================================================
+        telegraf:
+                hostname: "gs-influxdb-node-01.vm.dev.lsst.org"
+                ip: 10.0.0.249
+                memory: 1024
+                cpu: 1
+                puppet_environment: "develop"
+
         influx:
                 hostname: "gs-influxdb-node-01.vm.dev.lsst.org"
                 ip: 10.0.0.251
