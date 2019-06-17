@@ -81,7 +81,7 @@ then
 # Hiera repo not configured thru r10k since is leveraging a shared folder
 :sources:
   :lsst.org:
-    remote: 'https://github.com/lsst/itconf_l1ts.git'
+    remote: 'https://github.com/LSST-IT/lsst-itconf'
     basedir: '/etc/puppetlabs/code/environments'
 " > /etc/puppetlabs/r10k/r10k.yaml
 else
@@ -91,7 +91,7 @@ else
 # Hiera repo not configured thru r10k since is leveraging a shared folder
 :sources:
   :lsst.org:
-    remote: 'https://github.com/lsst/itconf_l1ts.git'
+    remote: 'https://github.com/LSST-IT/lsst-itconf'
     basedir: '/etc/puppetlabs/code/environments'
 
   :hieradata:
