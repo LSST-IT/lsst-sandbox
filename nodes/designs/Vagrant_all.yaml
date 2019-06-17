@@ -38,3 +38,10 @@ nodes:
                 memory: 1024
                 cpu: 1
                 puppet_environment: "develop"
+
+        ts-intcluster:
+                hostname: "ts-intcluster-node-02.vm.dev.lsst.org"
+                ip: "10.0.0.50"
+                memory: 1024
+                cpu: 1
+                puppet_environment: "develop"
