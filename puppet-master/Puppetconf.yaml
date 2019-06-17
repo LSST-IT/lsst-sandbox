@@ -11,14 +11,16 @@ puppet-master:
         # * hiera_repo
         shared_hiera: false
         shared_hiera_path: "hiera"
+        #shared_hiera: true
+        #shared_hiera_path: "../../lsst-sandbox-hiera/"
         #gitcode_path will be mounted on this environment in: /etc/puppetlabs/code/environments/$ENVIRONMENT
         #puppet_environment: "IT_1101_avillalobos"
         # If you want to work on your own puppet code, we recommend adding this variable with the path in where the puppet code is
-        #gitcode_path: "../../itconf_l1ts/"
+        #gitcode_path: "../../lsst-itconf/"
         #Location in where this will be mounted will be calculated from the puppet environment as:
         #  * /etc/puppetlabs/code/environment/<module_puppet_environment>/modules/<module_name>
         #module_development:
         #        module_name: "headerservice"
-        #        module_code_orig_path: "../../itconf_l1ts/modules/headerservice/"
+        #        module_code_orig_path: "../../lsst-itconf/modules/headerservice/"
         #        module_puppet_environment: "production"
  
