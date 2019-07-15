@@ -39,7 +39,7 @@ If you already have install the plugin, make sure it is in the latest version:
 This is the proposed structure to work with Puppet code and the LSST Sandbox. 
 
       workspace/
-      ├── itconf_l1ts
+      ├── lsst-itconf
       │   ├── Puppetfile
       │   ├── README.md
       │   ├── environment.conf
