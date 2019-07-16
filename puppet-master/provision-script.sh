@@ -57,6 +57,7 @@ sed -i 's#^PATH=.*#PATH=$PATH:/opt/puppetlabs/puppet/bin:$HOME/bin#g' /root/.bas
 #TODO HoxFix -> This installation should be removed once bug <https://github.com/puppetlabs/r10k/issues/930> is fixed
 /opt/puppetlabs/puppet/bin/gem install cri:2.15.6
 /opt/puppetlabs/puppet/bin/gem install r10k
+/opt/puppetlabs/server/bin/puppetserver gem install toml-rb
 
 if [ ! -d /etc/puppetlabs/r10k/ ]
 then
